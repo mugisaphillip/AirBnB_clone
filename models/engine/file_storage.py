@@ -1,114 +1,30 @@
 #!/usr/bin/python3
-import cmd
-from models import storage
-from models.base_model import BaseModel
+import json
 
-class HBNBCommand(cmd.Cmd):
-    prompt = "(hbnb) "
+class FileStorage:
+    __file_path = "file.json"
+    __objects = {}
 
-    def do_quit(self, arg):
-        """Exit the program"""
-        return True
+    def all(self):
+        return self.__objects
 
-    def do_EOF(self, arg):
-        """Exit the program using EOF (Ctrl+D)"""
-        return True
+    def new(self, obj):
+        key = f"{obj.__class__.____name__}.{obj.id}"
+        self.__objects[key] = obj
 
-    def emptyline(self):
-        pass
+    def save(self):
+        serialized = {key: obj.to_dict() for key, obj in self.__objects.items()}
+        with open(self.__file_path, 'w', encoding='utf-8') as file:
+            json.dump(serialized, file)
 
-    def do_create(self, arg):
-        """Create a new instance of BaseModel and save it"""
-        if not arg:
-            print("** class name missing **")
-        else:
-            class_name = arg
-            if class_name not in BaseModel.__subclasses__():
-                print("** class doesn't exist **")
-            else:
-                new_instance = BaseModel()
-                new_instance.save()
-                print(new_instance.id)
-
-    def do_show(self, arg):
-        """Print the string representation of an instance"""
-        if not arg:
-            print("** class name missing **")
-            return
-        args = arg.split()
-        if args[0] not in BaseModel.__subclasses__():
-            print("** class doesn't exist **")
-        elif len(args) < 2:
-            print("** instance id missing **")
-        else:
-            objects = storage.all()
-            key = args[0] + '.' + args[1]
-            if key in objects:
-                print(objects[key])
-            else:
-                print("** no instance found **")
-
-    def do_destroy(self, arg):
-        """Delete an instance"""
-        if not arg:
-            print("** class name missing **")
-            return
-        args = arg.split()
-        if args[0] not in BaseModel.__subclasses__():
-            print("** class doesn't exist **")
-        elif len(args) < 2:
-            print("** instance id missing **")
-        else:
-            objects = storage.all()
-            key = args[0] + '.' + args[1]
-            if key in objects:
-                del objects[key]
-                storage.save()
-            else:
-                print("** no instance found **")
-
-    def do_all(self, arg):
-        """Print all instances or all instances of a specific class"""
-        objects = storage.all()
-        if not arg:
-            print([str(obj) for obj in objects.values()])
-        elif arg not in BaseModel.__subclasses__():
-            print("** class doesn't exist **")
-        else:
-            print([str(obj) for key, obj in objects.items() if key.split('.')[0] == arg])
-
-    def do_update(self, arg):
-        """Update an instance's attribute"""
-        if not arg:
-            print("** class name missing **")
-            return
-        args = arg.split()
-        if args[0] not in BaseModel.__subclasses__():
-            print("** class doesn't exist **")
-            return
-        if len(args) < 2:
-            print("** instance id missing **")
-            return
-        objects = storage.all()
-        key = args[0] + '.' + args[1]
-        if key not in objects:
-            print("** no instance found **")
-            return
-        if len(args) < 3:
-            print("** attribute name missing **")
-            return
-        if len(args) < 4:
-            print("** value missing **")
-            return
-        instance = objects[key]
-        attr_name = args[2]
-        attr_value = args[3]
+    def reload(self):
         try:
-            attr_value = eval(attr_value)
-        except:
+            with open(self.__file_path, 'r', encoding='utf-8') as file:
+                data = json.load(file)
+                for key, value in data.items():
+                    cls, obj_id = key.split('.')
+                    obj_dict = value
+                    obj = globals()[cls](**obj_dict)
+                    self.__objects[key] = obj
+        except FileNotFoundError:
             pass
-        setattr(instance, attr_name, attr_value)
-        instance.save()
-
-if __name__ == '__main__':
-    HBNBCommand().cmdloop()

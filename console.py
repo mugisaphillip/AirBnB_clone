@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import cmd
-from models.engine.file_storage import storage
+from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
 
 class HBNBCommand(cmd.Cmd):
