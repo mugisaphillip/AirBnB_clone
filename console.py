@@ -5,6 +5,7 @@ from models import storage
 from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
 
+
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
 
@@ -77,7 +78,8 @@ class HBNBCommand(cmd.Cmd):
         elif arg not in BaseModel.__subclasses__():
             print("** class doesn't exist **")
         else:
-            print([str(obj) for key, obj in objects.items() if key.split('.')[0] == arg])
+            print([str(obj) for key, obj in objects.items() if
+                   key.split('.')[0] == arg])
 
     def do_update(self, arg):
         """Update an instance's attribute"""
@@ -111,6 +113,7 @@ class HBNBCommand(cmd.Cmd):
             pass
         setattr(instance, attr_name, attr_value)
         instance.save()
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
