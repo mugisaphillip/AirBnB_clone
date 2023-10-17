@@ -20,20 +20,23 @@ class FileStorage:
             d = {k: v.to_dict() for k, v in FileStorage.__objects.items()}
             json.dump(d, f)
 
-    def reload(self):
+    def get_classes(self):
         from models.base_model import BaseModel
         from models.user import User
 
-        class_dict = {
+        classes = {
                 "BaseModel": BaseModel,
                 "User": User
                 }
+        return classes
+
+    def reload(self):
 
         obj = FileStorage.__objects
         try:
             with open(FileStorage.__file_path, 'r', encoding='utf-8') as file:
                 data = json.load(file)
                 for key, value in data.items():
-                    obj[key] = class_dict[value["__class__"]](**value)
+                    obj[key] = self.get_classes()[value["__class__"]](**value)
         except FileNotFoundError:
             pass
