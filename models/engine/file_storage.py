@@ -12,15 +12,19 @@ class FileStorage:
         return FileStorage.__objects
 
     def new(self, obj):
-        key = f"{obj.__class__.__name__}.{obj.id}"
-        FileStorage.__objects[key] = obj
+        if obj.id in type(self).__objects:
+            return
+
+        key = "{}.{}".format(obj.__class__.__name__, obj.id)
+        type(self).__objects[key] = obj
 
     def save(self):
-        with open(FileStorage.__file_path, 'w', encoding='utf-8') as file:
-            my_dict = {}
-            for key, value in FileStorage.__objects.items():
-                my_dict[key] = value.to_dict()
-            json.dump(my_dict, file)
+        new_dict = []
+        for obj in type(self).__objects.values():
+            new_dict.append(obj.to_dict())
+
+        with open(type(self).__file_path, "w", encoding='utf-8') as file:
+             json.dump(new_dict, file)
 
     def reload(self):
         from models.base_model import BaseModel
