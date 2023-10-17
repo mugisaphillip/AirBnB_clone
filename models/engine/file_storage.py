@@ -27,17 +27,11 @@ class FileStorage:
                 "User": User
                 }
 
+        obj = FileStorage.__objects
         try:
             with open(self.__file_path, 'r', encoding='utf-8') as file:
                 data = json.load(file)
                 for key, value in data.items():
-                    cls, obj_id = key.split('.')
-                    if cls == 'User':
-                        obj_dict = value
-                        obj = User(**obj_dict)
-                    else:
-                        obj_dict = value
-                        obj = class_dict.get(cls)(**obj_dict)
-                    self.__objects[key] = obj
+                    obj[key] = class_dict[value["__class__"]](**value)
         except FileNotFoundError:
             pass
