@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 import json
 
-
 class FileStorage:
     "class to serialize and deserialize json"
+
 
     __file_path = "file.json"
     __objects = {}
@@ -27,6 +27,7 @@ class FileStorage:
 
         class_dict = {
                 "BaseModel": BaseModel,
+                "User": User
                 }
 
         obj = FileStorage.__objects
