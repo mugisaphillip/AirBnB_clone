@@ -77,7 +77,7 @@ class HBNBCommand(cmd.Cmd):
         objects = storage.all()
         if not arg:
             print([str(obj) for obj in objects.values()])
-        elif arg not in BaseModel.__subclasses__():
+        elif args[0] not in storage.get_classes().keys():
             print("** class doesn't exist **")
         else:
             print([str(obj) for key, obj in objects.items() if
@@ -88,7 +88,7 @@ class HBNBCommand(cmd.Cmd):
         args = arg.split()
         if not arg:
             print("** class name missing **")
-        elif args[0] not in BaseModel.__subclasses__():
+        elif args[0] not in storage.get_classes().keys():
             print("** class doesn't exist **")
         elif len(args) < 2:
             print("** instance id missing **")
