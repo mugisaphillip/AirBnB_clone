@@ -39,7 +39,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
-        args = arg.split(" ")
+        args = arg.split()
         if args[0] not in storage.get_classes().keys():
             print("** class doesn't exist **")
         elif len(args) < 2:
