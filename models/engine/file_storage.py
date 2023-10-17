@@ -19,6 +19,14 @@ class FileStorage:
             json.dump(serialized, file)
 
     def reload(self):
+        from models.base_model import BaseModel
+        from models.user import User
+
+        class_dict = {
+                "BaseModel": BaseModel,
+                "User": User
+                }
+
         try:
             with open(self.__file_path, 'r', encoding='utf-8') as file:
                 data = json.load(file)
@@ -29,7 +37,7 @@ class FileStorage:
                         obj = User(**obj_dict)
                     else:
                         obj_dict = value
-                        obj = globals()[cls](**obj_dict)
+                        obj = class_dict.get(cls)(**obj_dict)
                     self.__objects[key] = obj
         except FileNotFoundError:
             pass
