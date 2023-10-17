@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 import json
 
-
 class FileStorage:
     "class to serialize and deserialize json"
+
 
     __file_path = "file.json"
     __objects = {}
@@ -19,12 +19,19 @@ class FileStorage:
         type(self).__objects[key] = obj
 
     def save(self):
+<<<<<<< HEAD
         new_dict = []
         for obj in type(self).__objects.values():
             new_dict.append(obj.to_dict())
 
         with open(type(self).__file_path, "w", encoding='utf-8') as file:
              json.dump(new_dict, file)
+=======
+        serialized = {key: obj.to_dict() for key, obj in
+                      FileStorage.__objects.items()}
+        with open(FileStorage.__file_path, 'w', encoding='utf-8') as file:
+            json.dump(serialized, file)
+>>>>>>> parent of a8005de... refactor
 
     def reload(self):
         from models.base_model import BaseModel
@@ -32,6 +39,7 @@ class FileStorage:
 
         class_dict = {
                 "BaseModel": BaseModel,
+                "User": User
                 }
 
         obj = FileStorage.__objects
