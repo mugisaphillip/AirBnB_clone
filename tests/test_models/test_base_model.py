@@ -4,6 +4,7 @@
 Unittest classes:
 """
 import unittest
+from datetime import datetime
 from models.base_model import BaseModel
 
 class TestBaseModel(unittest.TestCase):
@@ -54,6 +55,27 @@ class TestBaseModel(unittest.TestCase):
         m = BaseModel()
         self.assertEqual(m.__str__(), f"[{m.__class__.__name__}] ({m.id}) {m.__dict__}")
 
+
+class TestBaseModel_from_dict(unittest.TestCase):
+    def test_no_arguments_passed(self):
+        b = BaseModel()
+        self.assertTrue(b.id)
+
+    def test_arguments_passed(self):
+        test_data = {'id': 'a592f7d4-ba37-44b8-a381-4b9f51639895',
+                    'created_at': '2023-10-17T07:29:05.227683',
+                    'updated_at': '2023-10-17T07:29:05.227683',
+                    'name': 'My_First_Model', 'my_number': 89,
+                    '__class__': 'BaseModel'}
+
+        b = BaseModel(**test_data)
+        self.assertEqual(b.id, test_data["id"])
+        self.assertEqual(b.created_at, datetime.strptime(test_data['created_at'],
+                                                '%Y-%m-%dT%H:%M:%S.%f'))
+        self.assertEqual(b.updated_at, datetime.strptime(test_data['updated_at'],
+                                                '%Y-%m-%dT%H:%M:%S.%f'))
+        self.assertEqual(b.name, "My_First_Model")
+        self.assertEqual(str(b.my_number), "89")
 
 if __name__ == "__main__":
     unittest.main()
