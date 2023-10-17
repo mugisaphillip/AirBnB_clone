@@ -1,9 +1,6 @@
 #!/usr/bin/python3
 
 import cmd
-from models import storage
-from models.engine.file_storage import FileStorage
-from models.base_model import BaseModel
 
 
 class HBNBCommand(cmd.Cmd):
@@ -19,3 +16,7 @@ class HBNBCommand(cmd.Cmd):
 
     def emptyline(self):
         pass
+
+
+if __name__ == '__main__':
+    HBNBCommand().cmdloop()
