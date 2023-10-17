@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 import json
 
+
 class FileStorage:
     "class to serialize and deserialize json"
-
 
     __file_path = "file.json"
     __objects = {}
@@ -16,10 +16,11 @@ class FileStorage:
         FileStorage.__objects[key] = obj
 
     def save(self):
-        serialized = {key: obj.to_dict() for key, obj in
-                      FileStorage.__objects.items()}
         with open(FileStorage.__file_path, 'w', encoding='utf-8') as file:
-            json.dump(serialized, file)
+            my_dict = {}
+            for key, value in FileStorage.__objects.items():
+                my_dict[key] = value.to_dict()
+            json.dump(my_dict, file)
 
     def reload(self):
         from models.base_model import BaseModel
@@ -27,7 +28,6 @@ class FileStorage:
 
         class_dict = {
                 "BaseModel": BaseModel,
-                "User": User
                 }
 
         obj = FileStorage.__objects
