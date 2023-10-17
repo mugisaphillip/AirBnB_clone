@@ -19,4 +19,3 @@ class HBNBCommand(cmd.Cmd):
 
     def emptyline(self):
         pass
-
