@@ -22,11 +22,19 @@ class FileStorage:
 
     def get_classes(self):
         from models.base_model import BaseModel
-        from models.user import User
+        from models.place import Place
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.review import Review
 
         classes = {
                 "BaseModel": BaseModel,
-                "User": User
+                "place": Place,
+                "state": State,
+                "city": City,
+                "amenity": Amenity,
+                "review": Review,
                 }
         return classes
 
